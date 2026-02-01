@@ -1,20 +1,29 @@
-semgrep_sast_scan:
-  name: Semgrep SAST Scan
-  runs-on: ubuntu-latest
+name: Security Scan Workflow
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
-    - name: Run Semgrep Scan
-      run: |
-        docker run --rm -v "${{ github.workspace }}:/src" semgrep/semgrep semgrep scan /src --json -o /src/semgrep-results.json
+jobs:
+  semgrep_sast_scan:
+    name: Semgrep SAST Scan
+    runs-on: ubuntu-latest
 
-    - name: Pretty-print Semgrep JSON
-      run: jq . semgrep-results.json
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Upload Semgrep results
-      uses: actions/upload-artifact@v4
-      with:
-        name: semgrep-results
-        path: semgrep-results.json
+      - name: Run Semgrep Scan
+        run: |
+          docker run --rm -v "${{ github.workspace }}:/src" semgrep/semgrep semgrep scan /src --json -o /src/semgrep-results.json
+
+      - name: Pretty-print Semgrep JSON
+        run: jq . semgrep-results.json
+
+      - name: Upload Semgrep results
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-results
+          path: semgrep-results.json
