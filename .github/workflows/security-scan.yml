@@ -1,27 +1,20 @@
 name: Semgrep SAST Scan
+
 on:
   push:
   pull_request:
 
 jobs:
   semgrep_sast_scan:
-    name: Semgrep SAST Scan
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Semgrep Scan (Docker)
+      - name: Run Semgrep Scan
         run: |
-          # Write results into the mounted workspace so the host runner can see them
-          docker run --rm -v "$GITHUB_WORKSPACE:/src" semgrep/semgrep \
-            semgrep scan /src --json -o /src/semgrep-results.json || true
-
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
-      - name: Pretty-print Semgrep JSON
-        run: jq . semgrep-results.json
+          docker run --rm -v "$PWD:/src" semgrep/semgrep scan /src --json -o semgrep-results.json
 
       - name: Upload Semgrep results
         uses: actions/upload-artifact@v4
