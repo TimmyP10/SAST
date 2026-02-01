@@ -19,7 +19,7 @@ jobs:
       # Fixed: Use absolute path /src/semgrep-results.json so file lands in workspace
       - name: Run Semgrep Scan
         run: |
-          docker run --rm -v "$(pwd):/src" semgrep/semgrep semgrep scan /src --json -o /src/semgrep-results.json
+          docker run --rm -v "${{ github.workspace }}:/src" semgrep/semgrep semgrep scan /src --config auto --json -o /src/semgrep-results.json
 
       # Provide a better view of the output
       - name: Pretty-print Semgrep JSON
