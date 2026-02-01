@@ -1,5 +1,5 @@
 # The job ID (semgrep_sast_scan) is used for referencing this job, while 'name' is the display title in the GitHub UI.
-
+jobs: 
 semgrep_sast_scan:
   name: Semgrep SAST Scan
   runs-on: ubuntu-latest
